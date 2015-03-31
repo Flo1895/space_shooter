@@ -9,7 +9,7 @@ EnemyShip::EnemyShip(int x, int y, std::string texturePath)
 EnemyShip::~EnemyShip() {}
 
 sf::Sprite EnemyShip::animate() {
-  this->position.y += 2;
+  this->position.y += 1;
   this->sprite->setPosition(position);
   if (this->position.y > 600) {
     this->processed = true;
