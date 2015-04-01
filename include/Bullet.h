@@ -10,10 +10,10 @@
 class Bullet : public GameObject {
 public:
   Bullet();
-  Bullet(int x, int y, std::string texturePath);
+  Bullet(int x, int y, sf::Texture *texture);
   ~Bullet();
 
-  sf::Sprite animate();
+  sf::Sprite animate(float tickLength);
 };
 
 #endif // BULLET_H_

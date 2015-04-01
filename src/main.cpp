@@ -9,13 +9,23 @@
 #include "EnemyShip.h"
 #include "Explosion.h"
 #include "Utils.h"
+#include "TextureManager.h"
 
 int main()
 {
   Utils::initPRNG();
   sf::RenderWindow window(sf::VideoMode(1280, 720), "Test");
   window.setFramerateLimit(60);
+
+  // load textures
+  TextureManager textureManager;
+  textureManager.add("background1", "../../graphics/background1.png");
+  textureManager.add("ownShip", "../../graphics/ownShip.png");
+  textureManager.add("enemy1", "../../graphics/enemy1.png");
+  textureManager.add("bullet", "../../graphics/bullet.png");
+  textureManager.add("explosion", "../../graphics/explosion.png");
   
+  // display kill counter
   int killCounter = 0;
   sf::Font font;
   if (!font.loadFromFile("../../font/unispace_bold.ttf")) {
@@ -29,31 +39,32 @@ int main()
   killCounterText.setPosition(20, 20);
   killCounterText.setString(std::to_string(killCounter));
 
-  Ship ownShip(362, 620, "../../graphics/ownShip.png");
+  // own ship
+  Ship ownShip(362, 620, textureManager.get("ownShip"));
+
+  // bullets, enemy ships and explosions
   std::vector<Bullet*> curBullets;
   std::vector<Bullet*>::iterator curBulletsIt;
   std::vector<EnemyShip*> curEnemyShips;
   std::vector<EnemyShip*>::iterator curEnemyShipsIt;
-  EnemyShip *e = new EnemyShip(362, 30, "../../graphics/enemy1.png");
-  curEnemyShips.push_back(e);
-
   std::vector<Explosion*> curExplosions;
   std::vector<Explosion*>::iterator curExplosionsIt;
-
-  sf::Texture backgroundTexture;
-  if (!backgroundTexture.loadFromFile("../../graphics/background1.png")) {
-    return EXIT_FAILURE;
-  }
-  backgroundTexture.setSmooth(true);
   
-//  backgroundTexture.setRepeated(true);
-  sf::Sprite backgroundSprite(backgroundTexture);
-//  backgroundSprite.setTextureRect(sf::IntRect(0, 0, 800, 600));
+  // background image
+  sf::Sprite backgroundSprite(*(textureManager.get("background1")));
   float scaleX = 1280.0f/1920.0f;
   float scaleY = 720.0f/1080.0f;
   backgroundSprite.scale(scaleX, scaleY);
 
+  // start clock
+  sf::Clock clock;
+  float tickLength;
+
+  // game loop
   while (window.isOpen()) {
+    tickLength = clock.restart().asSeconds();
+    std::cout << int(tickLength * 250) << std::endl;
+
     sf::Event event;
     while (window.pollEvent(event)) {
       if (event.type == sf::Event::Closed) {
@@ -64,18 +75,21 @@ int main()
 
     int newEnemyShip = Utils::getRandomNumber(1, 200);
     if (newEnemyShip == 1) {
-      EnemyShip *e = new EnemyShip(Utils::getRandomNumber(10, 1235), 30, "../../graphics/enemy1.png");
+      EnemyShip *e = new EnemyShip(Utils::getRandomNumber(10, 1235), 30, textureManager.get("enemy1"));
       curEnemyShips.push_back(e);
     }
 
+    // draw background
     window.draw(backgroundSprite);
-    // display kill counter
+    // draw kill counter
     window.draw(killCounterText);
-    window.draw(ownShip.animate());
+    // draw own ship
+    window.draw(ownShip.animate(tickLength));
+
     // proccess bullets
     for (curBulletsIt = curBullets.begin();
          curBulletsIt != curBullets.end();) {      
-      window.draw((*curBulletsIt)->animate());
+      window.draw((*curBulletsIt)->animate(tickLength));
       if ((*curBulletsIt)->isProcessed()) {
         delete *curBulletsIt;
         curBulletsIt = curBullets.erase(curBulletsIt);
@@ -83,10 +97,11 @@ int main()
         ++curBulletsIt;
       }
     }
+
     // process enemy ships
     for (curEnemyShipsIt = curEnemyShips.begin();
          curEnemyShipsIt != curEnemyShips.end();) {      
-      window.draw((*curEnemyShipsIt)->animate());
+      window.draw((*curEnemyShipsIt)->animate(tickLength));
       if ((*curEnemyShipsIt)->isProcessed()) {
         delete *curEnemyShipsIt;
         curEnemyShipsIt = curEnemyShips.erase(curEnemyShipsIt);
@@ -94,10 +109,11 @@ int main()
         ++curEnemyShipsIt;
       }
     }
+
     // process explosions
     for (curExplosionsIt = curExplosions.begin();
          curExplosionsIt != curExplosions.end();) {
-      window.draw((*curExplosionsIt)->animate());
+      window.draw((*curExplosionsIt)->animate(tickLength));
       if ((*curExplosionsIt)->isProcessed()) {
         delete *curExplosionsIt;
         curExplosionsIt = curExplosions.erase(curExplosionsIt);
@@ -105,6 +121,7 @@ int main()
         ++curExplosionsIt;
       }
     }
+
     // check collision between enemy and bullet
     for (curBulletsIt = curBullets.begin();
          curBulletsIt != curBullets.end();
@@ -112,7 +129,7 @@ int main()
       for (curEnemyShipsIt = curEnemyShips.begin();
            curEnemyShipsIt != curEnemyShips.end();) {
         if ((*curBulletsIt)->intersects(*curEnemyShipsIt)) {
-          Explosion *ex = new Explosion((*curEnemyShipsIt)->getPositionX(), (*curEnemyShipsIt)->getPositionY(), "../../graphics/explosion.png");
+          Explosion *ex = new Explosion((*curEnemyShipsIt)->getPositionX(), (*curEnemyShipsIt)->getPositionY(), textureManager.get("explosion"));
           curExplosions.push_back(ex);
           delete *curEnemyShipsIt;
           curEnemyShipsIt = curEnemyShips.erase(curEnemyShipsIt);
@@ -123,6 +140,7 @@ int main()
         }
       }
     }
+
     // check collision between enemy and own ship
     for (curEnemyShipsIt = curEnemyShips.begin();
          curEnemyShipsIt != curEnemyShips.end();
@@ -134,6 +152,7 @@ int main()
 
     window.display();
 
+    // user input
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
       ownShip.move(sf::Keyboard::Left);
     }
@@ -143,7 +162,7 @@ int main()
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
       int x = ownShip.getPositionX() + 32;
       int y = ownShip.getPositionY();
-      Bullet *b = new Bullet(x, y, "../../graphics/bullet.png");
+      Bullet *b = new Bullet(x, y, textureManager.get("bullet"));
       curBullets.push_back(b);
     }
   }

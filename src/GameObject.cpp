@@ -3,14 +3,10 @@
 GameObject::GameObject()
 : position(), texture(), sprite() {}
 
-GameObject::GameObject(int x, int y, std::string texturePath)
-: position(x, y), size(), texture(), sprite() {
-  if (!this->texture.loadFromFile(texturePath)) {
-    // some nice logging or something like this 
-  }
-  this->size = this->texture.getSize();
-  this->texture.setSmooth(true);
-  this->sprite = new sf::Sprite(texture);
+GameObject::GameObject(int x, int y, sf::Texture *texture)
+: position(x, y), size(), texture(texture), sprite() {
+  this->size = this->texture->getSize();
+  this->sprite = new sf::Sprite(*texture);
   this->sprite->setPosition(this->position);
   this->processed = false;
 }

@@ -13,6 +13,7 @@ set (PROJECT_SOURCES
       Utils.cpp
       Collision.cpp
       Explosion.cpp
+      TextureManager.cpp
     )
 
 set (PROJECT_LIB_SOURCES
@@ -23,6 +24,7 @@ set (PROJECT_LIB_SOURCES
       Utils.cpp
       Collision.cpp
       Explosion.cpp
+      TextureManager.cpp
     )
 
 set (PROJECT_HEADERS
@@ -33,6 +35,7 @@ set (PROJECT_HEADERS
       ../include/Utils.h
       ../include/Collision.h
       ../include/Explosion.h
+      ../include/TextureManager.h
     )
 
 # create executable

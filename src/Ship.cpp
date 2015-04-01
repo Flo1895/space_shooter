@@ -3,8 +3,8 @@
 Ship::Ship()
 : GameObject() {}
 
-Ship::Ship(int x, int y, std::string texturePath)
-: GameObject(x, y, texturePath) {}
+Ship::Ship(int x, int y, sf::Texture *texture)
+: GameObject(x, y, texture) {}
 
 Ship::~Ship() {}
 
@@ -25,6 +25,6 @@ void Ship::move(sf::Keyboard::Key key) {
   }
 }
 
-sf::Sprite Ship::animate() {
+sf::Sprite Ship::animate(float tickLength) {
   return *(this->sprite);
 }

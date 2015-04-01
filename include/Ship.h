@@ -10,10 +10,10 @@
 class Ship : public GameObject {
 public:
   Ship();
-  Ship(int x, int y, std::string texturePath);
+  Ship(int x, int y, sf::Texture *texture);
   ~Ship();
   void move(sf::Keyboard::Key key);
-  sf::Sprite animate();
+  sf::Sprite animate(float tickLength);
 };
 
 #endif // SHIP_H_

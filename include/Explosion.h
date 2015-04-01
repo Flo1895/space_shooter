@@ -13,13 +13,14 @@ private:
   void init();
   std::vector<sf::IntRect> frames;
   int currentFrame;
-  sf::Clock clock;
+  float updateTime;
+  float timeSinceLastUpdate;
 
 public:
   Explosion();
-  Explosion(int x, int y, std::string texturePath);
+  Explosion(int x, int y, sf::Texture *texture);
   ~Explosion();
-  sf::Sprite animate();
+  sf::Sprite animate(float tickLength);
 };
 
 #endif // EXPLOSION_H_
