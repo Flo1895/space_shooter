@@ -12,6 +12,7 @@ set (PROJECT_SOURCES
       EnemyShip.cpp
       Utils.cpp
       Collision.cpp
+      Explosion.cpp
     )
 
 set (PROJECT_LIB_SOURCES
@@ -21,6 +22,7 @@ set (PROJECT_LIB_SOURCES
       EnemyShip.cpp
       Utils.cpp
       Collision.cpp
+      Explosion.cpp
     )
 
 set (PROJECT_HEADERS
@@ -30,6 +32,7 @@ set (PROJECT_HEADERS
       ../include/EnemyShip.h
       ../include/Utils.h
       ../include/Collision.h
+      ../include/Explosion.h
     )
 
 # create executable

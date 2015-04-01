@@ -18,7 +18,7 @@ void Ship::move(sf::Keyboard::Key key) {
   }
   else if (key == sf::Keyboard::Right) {
     // move right if key right was pressed
-    if (this->position.x < 720) {
+    if (this->position.x < 1235) {
       this->position.x += 5;
       this->sprite->setPosition(this->position);
     }

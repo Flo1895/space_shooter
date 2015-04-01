@@ -7,12 +7,14 @@
 #include "Ship.h"
 #include "Bullet.h"
 #include "EnemyShip.h"
+#include "Explosion.h"
 #include "Utils.h"
 
 int main()
 {
   Utils::initPRNG();
-  sf::RenderWindow window(sf::VideoMode(800, 600), "Test");
+  sf::RenderWindow window(sf::VideoMode(1280, 720), "Test");
+  window.setFramerateLimit(60);
   
   int killCounter = 0;
   sf::Font font;
@@ -27,7 +29,7 @@ int main()
   killCounterText.setPosition(20, 20);
   killCounterText.setString(std::to_string(killCounter));
 
-  Ship ownShip(362, 500, "../../graphics/ownShip.png");
+  Ship ownShip(362, 620, "../../graphics/ownShip.png");
   std::vector<Bullet*> curBullets;
   std::vector<Bullet*>::iterator curBulletsIt;
   std::vector<EnemyShip*> curEnemyShips;
@@ -35,14 +37,21 @@ int main()
   EnemyShip *e = new EnemyShip(362, 30, "../../graphics/enemy1.png");
   curEnemyShips.push_back(e);
 
+  std::vector<Explosion*> curExplosions;
+  std::vector<Explosion*>::iterator curExplosionsIt;
+
   sf::Texture backgroundTexture;
-  if (!backgroundTexture.loadFromFile("../../graphics/background.png")) {
+  if (!backgroundTexture.loadFromFile("../../graphics/background1.png")) {
     return EXIT_FAILURE;
   }
   backgroundTexture.setSmooth(true);
-  backgroundTexture.setRepeated(true);
+  
+//  backgroundTexture.setRepeated(true);
   sf::Sprite backgroundSprite(backgroundTexture);
-  backgroundSprite.setTextureRect(sf::IntRect(0, 0, 800, 600));
+//  backgroundSprite.setTextureRect(sf::IntRect(0, 0, 800, 600));
+  float scaleX = 1280.0f/1920.0f;
+  float scaleY = 720.0f/1080.0f;
+  backgroundSprite.scale(scaleX, scaleY);
 
   while (window.isOpen()) {
     sf::Event event;
@@ -55,7 +64,7 @@ int main()
 
     int newEnemyShip = Utils::getRandomNumber(1, 200);
     if (newEnemyShip == 1) {
-      EnemyShip *e = new EnemyShip(Utils::getRandomNumber(10, 590), 30, "../../graphics/enemy1.png");
+      EnemyShip *e = new EnemyShip(Utils::getRandomNumber(10, 1235), 30, "../../graphics/enemy1.png");
       curEnemyShips.push_back(e);
     }
 
@@ -85,6 +94,17 @@ int main()
         ++curEnemyShipsIt;
       }
     }
+    // process explosions
+    for (curExplosionsIt = curExplosions.begin();
+         curExplosionsIt != curExplosions.end();) {
+      window.draw((*curExplosionsIt)->animate());
+      if ((*curExplosionsIt)->isProcessed()) {
+        delete *curExplosionsIt;
+        curExplosionsIt = curExplosions.erase(curExplosionsIt);
+      } else {
+        ++curExplosionsIt;
+      }
+    }
     // check collision between enemy and bullet
     for (curBulletsIt = curBullets.begin();
          curBulletsIt != curBullets.end();
@@ -92,6 +112,8 @@ int main()
       for (curEnemyShipsIt = curEnemyShips.begin();
            curEnemyShipsIt != curEnemyShips.end();) {
         if ((*curBulletsIt)->intersects(*curEnemyShipsIt)) {
+          Explosion *ex = new Explosion((*curEnemyShipsIt)->getPositionX(), (*curEnemyShipsIt)->getPositionY(), "../../graphics/explosion.png");
+          curExplosions.push_back(ex);
           delete *curEnemyShipsIt;
           curEnemyShipsIt = curEnemyShips.erase(curEnemyShipsIt);
           killCounter++;
