@@ -9,8 +9,7 @@
 class Highscore {
 private:
   // map contains kills as keys and player names as values
-  std::map<std::string, std::string> highscore;
-  std::map<std::string, std::string>::iterator highscoreIt;
+  std::map<int, std::string, std::greater<int>> highscore;
   std::string path;
   void loadFromFile();
   void saveToFile();
@@ -19,7 +18,8 @@ public:
   Highscore(std::string path);
   ~Highscore();
   void add(int kills, std::string playerName);
-  std::map<std::string, std::string> get();
+  std::map<int, std::string, std::greater<int>> get();
+  int size();
 };
 
 #endif // HIGHSCORE_H_

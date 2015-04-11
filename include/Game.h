@@ -29,14 +29,6 @@ private:
   Ship ownShip;
   std::vector<GameObject*> curGameObjects;
   std::vector<GameObject*>::iterator curGameObjectsIt;
-/*  
-  std::vector<Bullet*> curBullets;
-  std::vector<Bullet*>::iterator curBulletsIt;
-  std::vector<EnemyShip*> curEnemyShips;
-  std::vector<EnemyShip*>::iterator curEnemyShipsIt;
-  std::vector<Explosion*> curExplosions;
-  std::vector<Explosion*>::iterator curExplosionsIt;
-*/
 
   int killCounter;
   int noBullets;
@@ -45,8 +37,11 @@ private:
   bool isMovingRight;
   bool isFiring;
 
+  sf::Font font;
   sf::Text noBulletsText;
   sf::Text killCounterText;
+  sf::Text highscoreHeadline;
+  std::vector<sf::Text> highscoreEntries;
 
   void processEvents();
   void handleInput(sf::Keyboard::Key key, bool isPressed);

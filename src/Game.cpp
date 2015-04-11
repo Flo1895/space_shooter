@@ -6,7 +6,8 @@ Game::Game()
   ownShip(362, 620, textureManager.get("ownShip")),
   curGameObjects(), curGameObjectsIt(), killCounter(0),
   noBullets(50), bulletBackoff(0.0f), isMovingLeft(false),
-  isMovingRight(false), isFiring(false), noBulletsText(), killCounterText() {}
+  isMovingRight(false), isFiring(false), font(), noBulletsText(),
+  killCounterText(), highscoreHeadline(), highscoreEntries() {}
 
 Game::~Game() {}
 
@@ -14,7 +15,6 @@ void Game::run() {
   Utils::initPRNG();
 
   // load font
-  sf::Font font;
   if (!font.loadFromFile("../../font/unispace_bold.ttf")) {
     // logging...
     std::cout << "could not load font" << std::endl;
@@ -52,9 +52,10 @@ void Game::run() {
   gameOverMsg.setPosition((1280 - gameOverMsg.getLocalBounds().width) / 2, 320);
 
   // highscore message
-  sf::Text highscoreHeadline("HIGHSCORE", font, 25);
+  highscoreHeadline.setString("HIGHSCORE");
+  highscoreHeadline.setFont(font);
+  highscoreHeadline.setCharacterSize(25);
   highscoreHeadline.setColor(sf::Color::White);
-  std::vector<sf::Text> highscoreEntries;
   
   // background image
   sf::Sprite backgroundSprite(*(textureManager.get("background2")));
@@ -91,7 +92,7 @@ void Game::run() {
       window.draw(highscoreMsg);
     } else if (this->stateManager.getState() == PLAY) {
       int newEnemyShip = Utils::getRandomNumber(1, 150);
-      if (newEnemyShip == 1) {
+      if (newEnemyShip < 3) {
         EnemyShip *e = new EnemyShip(Utils::getRandomNumber(10, 1235),
                                      30, textureManager.get("enemy1"));
         curGameObjects.push_back(e);
@@ -110,24 +111,11 @@ void Game::run() {
       }  
     } else if (this->stateManager.getState() == GAME_OVER) {
       window.draw(gameOverMsg);
-      /*
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-        curGameState = HIGHSCORE;
-        highscore.add(killCounter, "test");
-        std::vector<std::string> highscoreEntriesString = highscore.get();
-        highscoreHeadline.setPosition((1280 - highscoreHeadline.getLocalBounds().width) / 2,
-                                      (720 - highscoreHeadline.getLocalBounds().height) / 2 - 20 - highscoreEntriesString.size() * 30);
-        int pos = 1;
-        for (auto& highscoreEntryString : highscoreEntriesString) {
-          sf::Text* highscoreEntry = new sf::Text(highscoreEntryString, font, 20);
-          highscoreEntry->setColor(sf::Color::White);
-          highscoreEntry->setPosition(1280 - highscoreEntry.getLocalBounds.)
-          highscoreEntries.push_back();
-        }
-      }
-      */
     } else if (this->stateManager.getState() == HIGHSCORE) {
       window.draw(highscoreHeadline);
+      for (auto& highscoreEntry : highscoreEntries) {
+        window.draw(highscoreEntry);
+      }
     }
 
     window.display();
@@ -154,14 +142,37 @@ void Game::processEvents() {
 }
 
 void Game::handleInput(sf::Keyboard::Key key, bool isPressed) {
-  if (key == sf::Keyboard::Left) {
-    isMovingLeft = isPressed;
-  } else if (key == sf::Keyboard::Right) {
-    isMovingRight = isPressed;
-  } else if (key == sf::Keyboard::Space) {
-    isFiring = isPressed;
-  } else if (key == sf::Keyboard::N) {
+  if (key == sf::Keyboard::N && stateManager.getState() == MENU) {
     this->stateManager.setState(PLAY);
+  } else if (key == sf::Keyboard::H && stateManager.getState() == MENU) {
+    this->stateManager.setState(HIGHSCORE);
+  } else if (key == sf::Keyboard::Left && stateManager.getState() == PLAY) {
+    isMovingLeft = isPressed;
+  } else if (key == sf::Keyboard::Right && stateManager.getState() == PLAY) {
+    isMovingRight = isPressed;
+  } else if (key == sf::Keyboard::Space && stateManager.getState() == PLAY) {
+    isFiring = isPressed;
+  } else if (key == sf::Keyboard::Space && stateManager.getState() == GAME_OVER) {
+    this->stateManager.setState(HIGHSCORE);
+    highscoreHeadline.setPosition((1280 - highscoreHeadline.getLocalBounds().width) / 2,
+                                  (720 - highscoreHeadline.getLocalBounds().height) / 2 - highscore.size() * 50);        
+    highscore.add(killCounter, "Player");
+    int pos = 1;
+    for (auto& highscoreEntryPair : highscore.get()) {
+      std::ostringstream highscoreEntryString;
+      if (pos < 10) {
+        highscoreEntryString << " ";
+      }
+      highscoreEntryString << pos << ". " << highscoreEntryPair.second << " (" << highscoreEntryPair.first << ")";
+      pos++;
+      sf::Text highscoreEntry(highscoreEntryString.str(), font, 20);
+      highscoreEntry.setColor(sf::Color::White);
+      highscoreEntry.setPosition((1280 - highscoreEntry.getLocalBounds().width) / 2,
+                                  (720 - highscoreEntry.getLocalBounds().height) / 2 - (highscore.size() - pos) * 30);
+      highscoreEntries.push_back(highscoreEntry);
+    }
+  } else if (key == sf::Keyboard::M && stateManager.getState() == HIGHSCORE) {
+    stateManager.setState(MENU);
   }
 }
 
@@ -188,7 +199,7 @@ void Game::update(float timePerFrame) {
       if ((*curGameObjectsIt)->getType() == "Bullet") {
         noBullets++;
         noBulletsText.setString(std::to_string(noBullets));        
-      }      
+      }
       delete *curGameObjectsIt;
       curGameObjectsIt = curGameObjects.erase(curGameObjectsIt);
     } else {

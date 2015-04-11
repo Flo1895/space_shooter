@@ -1,5 +1,7 @@
 #include "Highscore.h"
 
+#include <iostream>
+
 Highscore::Highscore(std::string path)
 : path(path) {
   this->loadFromFile();
@@ -10,10 +12,7 @@ Highscore::~Highscore() {}
 void Highscore::add(int kills, std::string playerName) {
   this->loadFromFile();
 
-  // convert kills from int to string
-  std::ostringstream killsStringstream;
-  killsStringstream << kills;
-  this->highscore[killsStringstream.str()] = playerName;
+  this->highscore[kills] = playerName;
   
   // remove entry with lowest kills if number of entries > 10
   if (this->highscore.size() > 10) {
@@ -23,8 +22,12 @@ void Highscore::add(int kills, std::string playerName) {
   this->saveToFile();
 }
 
-std::map<std::string, std::string> Highscore::get() {
+std::map<int, std::string, std::greater<int>> Highscore::get() {
   return this->highscore;
+}
+
+int Highscore::size() {
+  return this->highscore.size();
 }
 
 void Highscore::loadFromFile() {
@@ -33,21 +36,20 @@ void Highscore::loadFromFile() {
   if (highscoreFile.is_open()) {
     while (getline(highscoreFile, line)) {
       std::size_t pos = line.find("||");
-      std::string kills = line.substr(0, pos-1);
-      std::string name = line.substr(pos+1, std::string::npos);
-      this->highscore[kills] = name;
+      std::string name = line.substr(0, pos);
+      std::string kills = line.substr(pos+2, std::string::npos);
+      this->highscore[atoi(kills.c_str())] = name;
     }
     highscoreFile.close();
   }
 }
 
 void Highscore::saveToFile() {
+  remove(this->path.c_str());
   std::ofstream highscoreFile(this->path);
   if (highscoreFile.is_open()) {
-    for (highscoreIt = highscore.begin();
-         highscoreIt != highscore.end();
-         ++highscoreIt) {
-      highscoreFile << highscoreIt->second << "||" << highscoreIt->first << "\n";
+    for (auto& highscoreEntryPair : this->highscore) {
+      highscoreFile << highscoreEntryPair.second << "||" << highscoreEntryPair.first << "\n";
     }
     highscoreFile.close();
   }
