@@ -12,8 +12,8 @@ public:
   Ship();
   Ship(int x, int y, sf::Texture *texture);
   ~Ship();
-  void move(sf::Keyboard::Key key);
-  sf::Sprite animate(float tickLength);
+  void move(float tickLength);
+  void move(float tickLength, bool isMovingLeft, bool isMovingRight);
 };
 
 #endif // SHIP_H_

@@ -8,23 +8,21 @@ Ship::Ship(int x, int y, sf::Texture *texture)
 
 Ship::~Ship() {}
 
-void Ship::move(sf::Keyboard::Key key) {
-  if (key == sf::Keyboard::Left) {
+void Ship::move(float tickLength) {}
+
+void Ship::move(float tickLength, bool isMovingLeft, bool isMovingRight) {
+  if (isMovingLeft) {
     // move left if key left was pressed
     if (this->position.x > 10) {
-      this->position.x -= 5;
+      this->position.x -= tickLength*300.0f;
       this->sprite->setPosition(this->position);
     }
   }
-  else if (key == sf::Keyboard::Right) {
+  else if (isMovingRight) {
     // move right if key right was pressed
     if (this->position.x < 1235) {
-      this->position.x += 5;
+      this->position.x += tickLength*300.0f;
       this->sprite->setPosition(this->position);
     }
   }
-}
-
-sf::Sprite Ship::animate(float tickLength) {
-  return *(this->sprite);
 }

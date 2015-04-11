@@ -9,6 +9,7 @@
 
 class GameObject {
 protected:
+  std::string type;
   sf::Vector2f position;
   sf::Vector2u size;
   sf::Texture *texture;
@@ -19,6 +20,7 @@ public:
   GameObject();
   GameObject(int x, int y, sf::Texture *texture);
   ~GameObject();
+  std::string getType();
   int getPositionX();
   int getPositionY();
   sf::Vector2f getPosition();
@@ -26,8 +28,9 @@ public:
   bool intersects(GameObject *gameObject);
   void setProcessed(bool processed);
   bool isProcessed();
+  sf::Sprite getSprite();
 
-  virtual sf::Sprite animate(float tickLength) = 0;
+  virtual void move(float tickLength) = 0;
 };
 
 #endif // GAME_OBJECT_H_

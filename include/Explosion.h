@@ -20,7 +20,7 @@ public:
   Explosion();
   Explosion(int x, int y, sf::Texture *texture);
   ~Explosion();
-  sf::Sprite animate(float tickLength);
+  void move(float tickLength);
 };
 
 #endif // EXPLOSION_H_

@@ -1,6 +1,13 @@
 #include "TextureManager.h"
 
-TextureManager::TextureManager() {}
+TextureManager::TextureManager() {
+  this->add("background1", "../../graphics/background1.png");
+  this->add("background2", "../../graphics/background2.png");
+  this->add("ownShip", "../../graphics/ownShip.png");
+  this->add("enemy1", "../../graphics/enemy1.png");
+  this->add("bullet", "../../graphics/bullet.png");
+  this->add("explosion", "../../graphics/explosion.png");
+}
 
 TextureManager::~TextureManager() {
   std::map<std::string, sf::Texture*>::iterator texturesIt;

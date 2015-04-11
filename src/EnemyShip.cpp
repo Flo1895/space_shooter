@@ -1,18 +1,21 @@
 #include "EnemyShip.h"
 
 EnemyShip::EnemyShip()
-: GameObject() {}
+: GameObject() {
+  this->type = "EnemyShip";
+}
 
 EnemyShip::EnemyShip(int x, int y, sf::Texture *texture)
-: GameObject(x, y, texture), moveYPerSecond(250) {}
+: GameObject(x, y, texture) {
+  this->type = "EnemyShip";
+}
 
 EnemyShip::~EnemyShip() {}
 
-sf::Sprite EnemyShip::animate(float tickLength) {
-  this->position.y += int(tickLength * this->moveYPerSecond);
+void EnemyShip::move(float tickLength) {
+  this->position.y += tickLength * 200;
   this->sprite->setPosition(position);
   if (this->position.y > 600) {
     this->processed = true;
   }
-  return *(this->sprite);
 }

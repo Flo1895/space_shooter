@@ -14,6 +14,9 @@ set (PROJECT_SOURCES
       Collision.cpp
       Explosion.cpp
       TextureManager.cpp
+      Highscore.cpp
+      StateManager.cpp
+      Game.cpp
     )
 
 set (PROJECT_LIB_SOURCES
@@ -25,6 +28,9 @@ set (PROJECT_LIB_SOURCES
       Collision.cpp
       Explosion.cpp
       TextureManager.cpp
+      Highscore.cpp
+      StateManager.cpp
+      Game.cpp
     )
 
 set (PROJECT_HEADERS
@@ -36,6 +42,10 @@ set (PROJECT_HEADERS
       ../include/Collision.h
       ../include/Explosion.h
       ../include/TextureManager.h
+      ../include/Highscore.h
+      ../include/GameState.h
+      ../include/StateManager.h
+      ../include/Game.h
     )
 
 # create executable

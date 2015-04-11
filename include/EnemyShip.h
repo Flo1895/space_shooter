@@ -8,14 +8,11 @@
 #include <SFML/Graphics.hpp>
 
 class EnemyShip : public GameObject {
-private:
-  int moveYPerSecond;
-
 public:
   EnemyShip();
   EnemyShip(int x, int y, sf::Texture *texture);
   ~EnemyShip();
-  sf::Sprite animate(float tickLength);
+  void move(float tickLength);
 };
 
 #endif // ENEMY_SHIP_H_

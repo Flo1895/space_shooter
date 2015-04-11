@@ -12,8 +12,7 @@ public:
   Bullet();
   Bullet(int x, int y, sf::Texture *texture);
   ~Bullet();
-
-  sf::Sprite animate(float tickLength);
+  void move(float tickLength);
 };
 
 #endif // BULLET_H_

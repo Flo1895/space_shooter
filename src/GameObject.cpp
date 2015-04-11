@@ -4,7 +4,7 @@ GameObject::GameObject()
 : position(), texture(), sprite() {}
 
 GameObject::GameObject(int x, int y, sf::Texture *texture)
-: position(x, y), size(), texture(texture), sprite() {
+: type(""), position(x, y), size(), texture(texture), sprite() {
   this->size = this->texture->getSize();
   this->sprite = new sf::Sprite(*texture);
   this->sprite->setPosition(this->position);
@@ -13,6 +13,10 @@ GameObject::GameObject(int x, int y, sf::Texture *texture)
 
 GameObject::~GameObject() {
   delete sprite;
+}
+
+std::string GameObject::getType() {
+  return this->type;
 }
 
 int GameObject::getPositionX() {
@@ -42,4 +46,8 @@ void GameObject::setProcessed(bool processed) {
 
 bool GameObject::isProcessed() {
   return this->processed;
+}
+
+sf::Sprite GameObject::getSprite() {
+  return *(this->sprite);
 }

@@ -1,18 +1,21 @@
 #include "Bullet.h"
 
 Bullet::Bullet()
-: GameObject() {}
+: GameObject() {
+  this->type = "Bullet";
+}
 
 Bullet::Bullet(int x, int y, sf::Texture *texture)
-: GameObject(x, y, texture) {}
+: GameObject(x, y, texture) {
+  this->type = "Bullet";
+}
 
 Bullet::~Bullet() {}
 
-sf::Sprite Bullet::animate(float tickLength) {
-  this->position.y -= 5;
+void Bullet::move(float tickLength) {
+  this->position.y -= tickLength*250;
   this->sprite->setPosition(position);
   if (this->position.y < 0) {
     this->processed = true;
   }
-  return *(this->sprite);
 }
