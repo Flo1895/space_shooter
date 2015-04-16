@@ -7,7 +7,11 @@ Bullet::Bullet()
 
 Bullet::Bullet(int x, int y, sf::Texture *texture, Direction direction)
 : GameObject(x, y, texture) {
-  this->type = "Bullet";
+  if (direction == DOWN) {
+  	this->type = "EnemyBullet";
+  } else {
+    this->type = "Bullet";
+  }
   this->direction = direction;
 }
 

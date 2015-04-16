@@ -189,12 +189,25 @@ void Game::update(float timePerFrame) {
     curGameObjects.push_back(b);
     noBullets--;
     noBulletsText.setString(std::to_string(noBullets));
-  }  
+  }
     
   // move bullets, enemy ships and explosions and check if they are processed
+  std::vector<Bullet*> newEnemyBullets;
   for (curGameObjectsIt = curGameObjects.begin();
        curGameObjectsIt != curGameObjects.end();) {
     (*curGameObjectsIt)->move(timePerFrame);
+    if ((*curGameObjectsIt)->getType() == "EnemyShip") {
+      EnemyShip* enemyShip = dynamic_cast<EnemyShip*>(*curGameObjectsIt);
+      if (enemyShip->getFireBackoff() <= 0.0f) {
+        enemyShip->resetFireBackoff();
+        int x = enemyShip->getPositionX() + 20;
+        int y = enemyShip->getPositionY() + 60;
+        Bullet *b = new Bullet(x, y, textureManager.get("bullet"), DOWN);
+        newEnemyBullets.push_back(b);
+      } else {
+        enemyShip->reduceFireBackoff(timePerFrame);
+      }
+    }
     if ((*curGameObjectsIt)->isProcessed()) {
       if ((*curGameObjectsIt)->getType() == "Bullet") {
         noBullets++;
@@ -206,6 +219,9 @@ void Game::update(float timePerFrame) {
       ++curGameObjectsIt;
     }
   }
+  curGameObjects.insert(curGameObjects.end(),
+                      newEnemyBullets.begin(),
+                      newEnemyBullets.end());
 
   std::vector<Explosion*> newExplosions;
   for (auto& gameObject1 : curGameObjects) {
