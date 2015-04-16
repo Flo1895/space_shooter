@@ -185,7 +185,7 @@ void Game::update(float timePerFrame) {
     bulletBackoff = 10.f/60.f;
     int x = ownShip.getPositionX() + 32;
     int y = ownShip.getPositionY();
-    Bullet *b = new Bullet(x, y, textureManager.get("bullet"));
+    Bullet *b = new Bullet(x, y, textureManager.get("bullet"), UP);
     curGameObjects.push_back(b);
     noBullets--;
     noBulletsText.setString(std::to_string(noBullets));

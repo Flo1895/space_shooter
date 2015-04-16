@@ -4,6 +4,8 @@
 #include <time.h>
 #include <stdlib.h>
 
+enum Direction {UP, DOWN};
+
 class Utils {
 public:
   static void initPRNG();
