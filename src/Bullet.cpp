@@ -12,7 +12,7 @@ Bullet::Bullet(int x, int y, sf::Texture *texture, Direction direction)
     this->velocity = Utils::getRandomNumber(200, 300);
   } else {
     this->type = "Bullet";
-    this->velocity = 250;
+    this->velocity = 300;
   }
   this->direction = direction;
 }

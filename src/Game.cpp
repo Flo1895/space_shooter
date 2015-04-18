@@ -2,13 +2,30 @@
 
 Game::Game()
 : window(sf::VideoMode(1280, 720), "Test"),
-  stateManager(), highscore("./highscore"), textureManager(),
-  ownShip(362, 620, textureManager.get("ownShip")),
-  curGameObjects(), curGameObjectsIt(), killCounter(0),
-  noBullets(50), bulletBackoff(0.0f), isMovingLeft(false),
-  isMovingRight(false), isFiring(false), font(), newGameMsg(),
-  highscoreMsg(), noBulletsText(), killCounterText(),
-  gameOverMsg(), highscoreHeadline(), highscoreEntries(), backgroundSprite() {
+  stateManager(),
+  highscore("./highscore"),
+  textureManager(),
+  ownShip(362, 620,
+  textureManager.get("ownShip")),
+  curGameObjects(),
+  curGameObjectsIt(),
+  killCounter(0),
+  noBullets(50),
+  bulletBackoff(0.0f),
+  isMovingUp(false),
+  isMovingDown(false),
+  isMovingLeft(false),
+  isMovingRight(false),
+  isFiring(false),
+  font(),
+  newGameMsg(),
+  highscoreMsg(),
+  noBulletsText(),
+  killCounterText(),
+  gameOverMsg(),
+  highscoreHeadline(),
+  highscoreEntries(),
+  backgroundSprite() {
     this->init();
   }
 
@@ -123,6 +140,10 @@ void Game::handleInput(sf::Keyboard::Key key, bool isPressed) {
     this->stateManager.setState(PLAY);
   } else if (key == sf::Keyboard::H && this->stateManager.getState() == MENU) {
     this->stateManager.setState(HIGHSCORE);
+  } else if (key == sf::Keyboard::Up && this->stateManager.getState() == PLAY) {
+    this->isMovingUp = isPressed;
+  } else if (key == sf::Keyboard::Down && this->stateManager.getState() == PLAY) {
+    this->isMovingDown = isPressed;
   } else if (key == sf::Keyboard::Left && this->stateManager.getState() == PLAY) {
     this->isMovingLeft = isPressed;
   } else if (key == sf::Keyboard::Right && this->stateManager.getState() == PLAY) {
@@ -155,7 +176,8 @@ void Game::handleInput(sf::Keyboard::Key key, bool isPressed) {
 
 void Game::update(float timePerFrame) {
   // move own ship
-  this->ownShip.move(timePerFrame, this->isMovingLeft, this->isMovingRight);
+  this->ownShip.move(timePerFrame, this->isMovingUp, this->isMovingDown,
+                     this->isMovingLeft, this->isMovingRight);
 
   // firing
   if (this->isFiring && this->noBullets > 0 && this->bulletBackoff <= 0.0f) {
@@ -292,6 +314,8 @@ void Game::reset() {
   this->noBullets = 50;
   this->noBulletsText.setString(std::to_string(this->noBullets));
   this->bulletBackoff = 0.0f;
+  this->isMovingUp = false;
+  this->isMovingDown = false;
   this->isMovingRight = false;
   this->isMovingLeft = false;
   this->isFiring = false;

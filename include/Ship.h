@@ -8,12 +8,16 @@
 #include <SFML/Graphics.hpp>
 
 class Ship : public GameObject {
+private:
+  int velocity;
+
 public:
   Ship();
   Ship(int x, int y, sf::Texture *texture);
   ~Ship();
   void move(float tickLength);
-  void move(float tickLength, bool isMovingLeft, bool isMovingRight);
+  void move(float tickLength, bool isMovingUp, bool isMovingDown,
+  	        bool isMovingLeft, bool isMovingRight);
 };
 
 #endif // SHIP_H_

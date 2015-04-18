@@ -33,6 +33,8 @@ private:
   int killCounter;
   int noBullets;
   float bulletBackoff;
+  bool isMovingUp;
+  bool isMovingDown;
   bool isMovingLeft;
   bool isMovingRight;
   bool isFiring;
