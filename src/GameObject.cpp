@@ -19,6 +19,10 @@ std::string GameObject::getType() {
   return this->type;
 }
 
+void GameObject::setPosition(sf::Vector2f position) {
+  this->position = position;
+}
+
 int GameObject::getPositionX() {
   return this->position.x;
 }

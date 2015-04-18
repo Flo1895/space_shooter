@@ -21,6 +21,7 @@ public:
   GameObject(int x, int y, sf::Texture *texture);
   ~GameObject();
   std::string getType();
+  void setPosition(sf::Vector2f position);
   int getPositionX();
   int getPositionY();
   sf::Vector2f getPosition();

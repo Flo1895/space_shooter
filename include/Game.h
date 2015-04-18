@@ -38,14 +38,22 @@ private:
   bool isFiring;
 
   sf::Font font;
+  sf::Text newGameMsg;
+  sf::Text highscoreMsg;
   sf::Text noBulletsText;
   sf::Text killCounterText;
+  sf::Text gameOverMsg;
   sf::Text highscoreHeadline;
   std::vector<sf::Text> highscoreEntries;
 
+  sf::Sprite backgroundSprite;
+
+  void init();
   void processEvents();
   void handleInput(sf::Keyboard::Key key, bool isPressed);
   void update(float timePerFrame);
+  void draw();
+  void reset();
 };
 
 #endif // GAME_H_
