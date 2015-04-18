@@ -11,6 +11,7 @@
 class Bullet : public GameObject {
 private:
   Direction direction;
+  int velocity;
 
 public:
   Bullet();
