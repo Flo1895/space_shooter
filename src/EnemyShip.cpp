@@ -29,5 +29,5 @@ void EnemyShip::reduceFireBackoff(float timePerFrame) {
 }
 
 void EnemyShip::resetFireBackoff() {
-  this->fireBackoff = 60.f/60.f;
+  this->fireBackoff = 120.f/60.f;
 }
