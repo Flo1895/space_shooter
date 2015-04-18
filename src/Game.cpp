@@ -229,6 +229,11 @@ void Game::update(float timePerFrame) {
     if (gameObject1->getType() == "EnemyShip" && ownShip.intersects(gameObject1)) {
       this->stateManager.setState(GAME_OVER);
     }
+    // check collision between enemy bullet and own ship
+    if (gameObject1->getType() == "EnemyBullet" && ownShip.intersects(gameObject1)) {
+      this->stateManager.setState(GAME_OVER);
+    }
+
     // check collision between enemy ship and bullet
     for (auto& gameObject2 : curGameObjects) {
       if (gameObject1->getType() == "EnemyShip" &&
