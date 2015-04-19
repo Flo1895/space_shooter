@@ -5,6 +5,8 @@ TextureManager::TextureManager() {
   this->add("background2", "../../graphics/background2.png");
   this->add("ownShip", "../../graphics/ownShip.png");
   this->add("enemy1", "../../graphics/enemy1.png");
+  this->add("enemy2", "../../graphics/enemy2.png");
+  this->add("enemy3", "../../graphics/enemy3.png");
   this->add("bullet", "../../graphics/bullet.png");
   this->add("explosion", "../../graphics/explosion.png");
   this->add("livePowerUp", "../../graphics/livePowerUp.png");
@@ -30,4 +32,21 @@ void TextureManager::add(std::string name, std::string path) {
 sf::Texture* TextureManager::get(std::string name) {
   // TODO error handling when 'name' is not found
   return this->textures[name];
+}
+
+sf::Texture* TextureManager::getRandomShip() {
+  int shipNumber = Utils::getRandomNumber(1, 3);
+  switch (shipNumber) {
+    case 1:
+      return this->textures["enemy1"];
+      break;
+    case 2:
+      return this->textures["enemy2"];
+      break;
+    case 3:
+      return this->textures["enemy3"];
+      break;
+    default:
+      break;
+  }
 }

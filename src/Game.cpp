@@ -230,11 +230,9 @@ void Game::update(float timePerFrame) {
                                       gameObject1->getPositionY(),
                                       this->textureManager.get("explosion"));
         newGameObjects.push_back(ex);
-        std::cout << "test1" << std::endl;
         LivePowerUp *lp = new LivePowerUp(gameObject1->getPositionX(),
                                           gameObject1->getPositionY(),
                                           this->textureManager.get("livePowerUp"));
-        std::cout << "test2" << std::endl;
         newGameObjects.push_back(lp);
         this->killCounter++;
         this->killCounterText.setString(std::to_string(this->killCounter));
@@ -275,7 +273,7 @@ void Game::draw() {
     int newEnemyShip = Utils::getRandomNumber(1, 150);
     if (newEnemyShip < 3) {
       EnemyShip *e = new EnemyShip(Utils::getRandomNumber(10, 1235),
-                                   30, this->textureManager.get("enemy1"));
+                                   30, this->textureManager.getRandomShip());
       this->curGameObjects.push_back(e);
     }
 
@@ -329,6 +327,7 @@ void Game::reset() {
   this->ownShip.setPosition(ownShipPosition);
   this->ownShip.move(0.0f);
   this->ownShip.resetLives();
+  this->livesText.setString(std::to_string(this->ownShip.getLives()));
 
   // reset other values
   this->killCounter = 0;
