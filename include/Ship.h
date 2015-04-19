@@ -9,6 +9,7 @@
 
 class Ship : public GameObject {
 private:
+  int lives;
   int velocity;
 
 public:
@@ -18,6 +19,9 @@ public:
   void move(float tickLength);
   void move(float tickLength, bool isMovingUp, bool isMovingDown,
   	        bool isMovingLeft, bool isMovingRight);
+  int getLives();
+  void decreaseLives();
+  void resetLives();
 };
 
 #endif // SHIP_H_

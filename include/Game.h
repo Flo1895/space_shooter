@@ -44,9 +44,8 @@ private:
   sf::Text highscoreMsg;
   sf::Text noBulletsText;
   sf::Text killCounterText;
+  sf::Text livesText;
   sf::Text gameOverMsg;
-  sf::Text highscoreHeadline;
-  std::vector<sf::Text> highscoreEntries;
 
   sf::Sprite backgroundSprite;
 
@@ -55,6 +54,8 @@ private:
   void handleInput(sf::Keyboard::Key key, bool isPressed);
   void update(float timePerFrame);
   void draw();
+  void processEnemyHit();
+  void updateHighscore();
   void reset();
 };
 

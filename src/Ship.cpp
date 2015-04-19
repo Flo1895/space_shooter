@@ -1,10 +1,14 @@
 #include "Ship.h"
 
 Ship::Ship()
-: GameObject(), velocity(300) {}
+: GameObject(),
+  lives(3),
+  velocity(300) {}
 
 Ship::Ship(int x, int y, sf::Texture *texture)
-: GameObject(x, y, texture), velocity(300) {}
+: GameObject(x, y, texture),
+  lives(3),
+  velocity(300) {}
 
 Ship::~Ship() {}
 
@@ -38,4 +42,16 @@ void Ship::move(float tickLength, bool isMovingUp, bool isMovingDown,
   }
 
   this->sprite->setPosition(this->position);
+}
+
+int Ship::getLives() {
+  return this->lives;
+}
+
+void Ship::decreaseLives() {
+  this->lives--;
+}
+
+void Ship::resetLives() {
+  this->lives = 3;
 }

@@ -21,9 +21,8 @@ Game::Game()
   highscoreMsg(),
   noBulletsText(),
   killCounterText(),
+  livesText(),
   gameOverMsg(),
-  highscoreHeadline(),
-  highscoreEntries(),
   backgroundSprite() {
     this->init();
   }
@@ -48,7 +47,9 @@ void Game::init() {
   this->newGameMsg.setPosition((1280 - newGameMsg.getLocalBounds().width) / 2,
                                (720 - newGameMsg.getLocalBounds().height) / 2 - 50);
   // highscore
-  this->highscoreMsg.setString("(H)IGHSCORE");
+  std::ostringstream highscoreString;
+  highscoreString << "BEST: " << highscore.get();
+  this->highscoreMsg.setString(highscoreString.str());
   this->highscoreMsg.setFont(this->font);
   this->highscoreMsg.setCharacterSize(60);
   this->highscoreMsg.setColor(sf::Color::White);
@@ -61,6 +62,13 @@ void Game::init() {
   this->killCounterText.setCharacterSize(50);
   this->killCounterText.setColor(sf::Color::White);
   this->killCounterText.setPosition(20, 20);
+
+  // display number of lives for own ship
+  this->livesText.setString(std::to_string(this->ownShip.getLives()));
+  this->livesText.setFont(this->font);
+  this->livesText.setCharacterSize(30);
+  this->livesText.setColor(sf::Color::White);
+  this->livesText.setPosition(1000, 20);
 
   // number of bullets
   this->noBulletsText.setString(std::to_string(this->noBullets));
@@ -75,12 +83,6 @@ void Game::init() {
   this->gameOverMsg.setCharacterSize(60);
   this->gameOverMsg.setColor(sf::Color::White);
   this->gameOverMsg.setPosition((1280 - gameOverMsg.getLocalBounds().width) / 2, 320);
-
-  // highscore message
-  this->highscoreHeadline.setString("HIGHSCORE");
-  this->highscoreHeadline.setFont(this->font);
-  this->highscoreHeadline.setCharacterSize(25);
-  this->highscoreHeadline.setColor(sf::Color::White);
   
   // background image
   this->backgroundSprite.setTexture(*(this->textureManager.get("background2")));
@@ -134,42 +136,36 @@ void Game::processEvents() {
 }
 
 void Game::handleInput(sf::Keyboard::Key key, bool isPressed) {
-  if (key == sf::Keyboard::N && this->stateManager.getState() == MENU) {
-    this->reset();
-    this->stateManager.setState(PLAY);
-  } else if (key == sf::Keyboard::H && this->stateManager.getState() == MENU) {
-    this->stateManager.setState(HIGHSCORE);
-  } else if (key == sf::Keyboard::Up && this->stateManager.getState() == PLAY) {
-    this->isMovingUp = isPressed;
-  } else if (key == sf::Keyboard::Down && this->stateManager.getState() == PLAY) {
-    this->isMovingDown = isPressed;
-  } else if (key == sf::Keyboard::Left && this->stateManager.getState() == PLAY) {
-    this->isMovingLeft = isPressed;
-  } else if (key == sf::Keyboard::Right && this->stateManager.getState() == PLAY) {
-    this->isMovingRight = isPressed;
-  } else if (key == sf::Keyboard::Space && this->stateManager.getState() == PLAY) {
-    this->isFiring = isPressed;
-  } else if (key == sf::Keyboard::Space && this->stateManager.getState() == GAME_OVER) {
-    this->stateManager.setState(HIGHSCORE);
-    highscoreHeadline.setPosition((1280 - highscoreHeadline.getLocalBounds().width) / 2,
-                                  (720 - highscoreHeadline.getLocalBounds().height) / 2 - this->highscore.size() * 50);        
-    highscore.add(this->killCounter, "Player");
-    int pos = 1;
-    for (auto& highscoreEntryPair : this->highscore.get()) {
-      std::ostringstream highscoreEntryString;
-      if (pos < 10) {
-        highscoreEntryString << " ";
+  switch (this->stateManager.getState()) {
+    case MENU:
+      if (key == sf::Keyboard::N) {
+        this->reset();
+        this->stateManager.setState(PLAY);
       }
-      highscoreEntryString << pos << ". " << highscoreEntryPair.second << " (" << highscoreEntryPair.first << ")";
-      pos++;
-      sf::Text highscoreEntry(highscoreEntryString.str(), font, 20);
-      highscoreEntry.setColor(sf::Color::White);
-      highscoreEntry.setPosition((1280 - highscoreEntry.getLocalBounds().width) / 2,
-                                  (720 - highscoreEntry.getLocalBounds().height) / 2 - (this->highscore.size() - pos) * 30);
-      highscoreEntries.push_back(highscoreEntry);
-    }
-  } else if (key == sf::Keyboard::M && this->stateManager.getState() == HIGHSCORE) {
-    this->stateManager.setState(MENU);
+      break;
+    case PLAY:
+      if (key == sf::Keyboard::Up) {
+        this->isMovingUp = isPressed;
+      }
+      if (key == sf::Keyboard::Down) {
+        this->isMovingDown = isPressed;
+      }
+      if (key == sf::Keyboard::Left) {
+        this->isMovingLeft = isPressed;
+      }
+      if (key == sf::Keyboard::Right) {
+        this->isMovingRight = isPressed;
+      }
+      if (key == sf::Keyboard::Space) {
+        this->isFiring = isPressed;
+      }
+      break;
+    case GAME_OVER:
+      if (key == sf::Keyboard::Space) {
+        this->updateHighscore();
+        this->stateManager.setState(MENU);
+      }
+      break;
   }
 }
 
@@ -240,11 +236,13 @@ void Game::update(float timePerFrame) {
     }
     // check collision between enemy ship and own ship
     if (gameObject1->getType() == "EnemyShip" && ownShip.intersects(gameObject1)) {
-      this->stateManager.setState(GAME_OVER);
+      gameObject1->setProcessed(true);
+      this->processEnemyHit();
     }
     // check collision between enemy bullet and own ship
     if (gameObject1->getType() == "EnemyBullet" && ownShip.intersects(gameObject1)) {
-      this->stateManager.setState(GAME_OVER);
+      gameObject1->setProcessed(true);
+      this->processEnemyHit();
     }
   }
   this->curGameObjects.insert(this->curGameObjects.end(),
@@ -271,6 +269,8 @@ void Game::draw() {
 
     // draw kill counter
     this->window.draw(this->killCounterText);
+    // draw number of lives of own ship
+    this->window.draw(this->livesText);
     // draw number of bullets left
     this->window.draw(this->noBulletsText);
     // draw own ship
@@ -282,14 +282,27 @@ void Game::draw() {
     }  
   } else if (this->stateManager.getState() == GAME_OVER) {
     this->window.draw(this->gameOverMsg);
-  } else if (this->stateManager.getState() == HIGHSCORE) {
-    this->window.draw(this->highscoreHeadline);
-    for (auto& highscoreEntry : this->highscoreEntries) {
-      this->window.draw(highscoreEntry);
-    }
-  }
+  }  
 
   this->window.display();
+}
+
+void Game::processEnemyHit() {
+  std::cout << "test" << std::endl;
+  this->ownShip.decreaseLives();
+  this->livesText.setString(std::to_string(this->ownShip.getLives()));
+  if (this->ownShip.getLives() == 0) {
+    this->stateManager.setState(GAME_OVER);
+  }
+}
+
+void Game::updateHighscore() {
+  if (this->killCounter > this->highscore.get()) {
+    this->highscore.set(this->killCounter);
+    std::ostringstream highscoreString;
+    highscoreString << "BEST: " << highscore.get();
+    this->highscoreMsg.setString(highscoreString.str());
+  }  
 }
 
 void Game::reset() {
@@ -302,10 +315,11 @@ void Game::reset() {
   }
   std::cout << this->curGameObjects.size() << std::endl;
 
-  // reset position of own ship
+  // reset position and lives of own ship
   sf::Vector2f ownShipPosition(362, 620);
   this->ownShip.setPosition(ownShipPosition);
   this->ownShip.move(0.0f);
+  this->ownShip.resetLives();
 
   // reset other values
   this->killCounter = 0;
