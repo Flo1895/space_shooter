@@ -21,6 +21,7 @@ std::string GameObject::getType() {
 
 void GameObject::setPosition(sf::Vector2f position) {
   this->position = position;
+  this->sprite->setPosition(this->position);
 }
 
 int GameObject::getPositionX() {

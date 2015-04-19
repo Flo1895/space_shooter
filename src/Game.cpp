@@ -5,8 +5,7 @@ Game::Game()
   stateManager(),
   highscore("./highscore"),
   textureManager(),
-  ownShip(362, 620,
-  textureManager.get("ownShip")),
+  ownShip(362, 620, textureManager.get("ownShip")),
   curGameObjects(),
   curGameObjectsIt(),
   killCounter(0),
@@ -296,17 +295,17 @@ void Game::draw() {
 void Game::reset() {
   // delete all old game objects
   std::cout << this->curGameObjects.size() << std::endl;
-  /*
   for (curGameObjectsIt = curGameObjects.begin();
        curGameObjectsIt != curGameObjects.end();) {
     delete *curGameObjectsIt;
     curGameObjectsIt = curGameObjects.erase(curGameObjectsIt);
   }
-  */
+  std::cout << this->curGameObjects.size() << std::endl;
 
   // reset position of own ship
   sf::Vector2f ownShipPosition(362, 620);
   this->ownShip.setPosition(ownShipPosition);
+  this->ownShip.move(0.0f);
 
   // reset other values
   this->killCounter = 0;
