@@ -217,7 +217,7 @@ void Game::update(float timePerFrame) {
                               newEnemyBullets.begin(),
                               newEnemyBullets.end());
 
-  std::vector<Explosion*> newExplosions;
+  std::vector<GameObject*> newGameObjects;
   for (auto& gameObject1 : this->curGameObjects) {
     // check collision between enemy ship and bullet
     for (auto& gameObject2 : this->curGameObjects) {
@@ -229,7 +229,13 @@ void Game::update(float timePerFrame) {
         Explosion *ex = new Explosion(gameObject1->getPositionX(),
                                       gameObject1->getPositionY(),
                                       this->textureManager.get("explosion"));
-        newExplosions.push_back(ex);
+        newGameObjects.push_back(ex);
+        std::cout << "test1" << std::endl;
+        LivePowerUp *lp = new LivePowerUp(gameObject1->getPositionX(),
+                                          gameObject1->getPositionY(),
+                                          this->textureManager.get("livePowerUp"));
+        std::cout << "test2" << std::endl;
+        newGameObjects.push_back(lp);
         this->killCounter++;
         this->killCounterText.setString(std::to_string(this->killCounter));
       }
@@ -244,10 +250,16 @@ void Game::update(float timePerFrame) {
       gameObject1->setProcessed(true);
       this->processEnemyHit();
     }
+    // check collision between live powerUp and own ship
+    if (gameObject1->getType() == "LivePowerUp" && ownShip.intersects(gameObject1)) {
+      gameObject1->setProcessed(true);
+      this->ownShip.resetLives();
+      this->livesText.setString(std::to_string(this->ownShip.getLives()));
+    }
   }
   this->curGameObjects.insert(this->curGameObjects.end(),
-                              newExplosions.begin(),
-                              newExplosions.end());
+                              newGameObjects.begin(),
+                              newGameObjects.end());
 }
 
 void Game::draw() {
@@ -288,7 +300,6 @@ void Game::draw() {
 }
 
 void Game::processEnemyHit() {
-  std::cout << "test" << std::endl;
   this->ownShip.decreaseLives();
   this->livesText.setString(std::to_string(this->ownShip.getLives()));
   if (this->ownShip.getLives() == 0) {
@@ -307,13 +318,11 @@ void Game::updateHighscore() {
 
 void Game::reset() {
   // delete all old game objects
-  std::cout << this->curGameObjects.size() << std::endl;
   for (curGameObjectsIt = curGameObjects.begin();
        curGameObjectsIt != curGameObjects.end();) {
     delete *curGameObjectsIt;
     curGameObjectsIt = curGameObjects.erase(curGameObjectsIt);
   }
-  std::cout << this->curGameObjects.size() << std::endl;
 
   // reset position and lives of own ship
   sf::Vector2f ownShipPosition(362, 620);

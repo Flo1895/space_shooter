@@ -10,6 +10,7 @@
 #include "Bullet.h"
 #include "EnemyShip.h"
 #include "Explosion.h"
+#include "LivePowerUp.h"
 
 #include <iostream>
 #include <vector>
