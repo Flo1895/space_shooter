@@ -177,10 +177,17 @@ void Game::update(float timePerFrame) {
   // firing
   if (this->isFiring && this->noBullets > 0 && this->bulletBackoff <= 0.0f) {
     this->bulletBackoff = 10.f/60.f;
-    int x = ownShip.getPositionX() + 32;
-    int y = ownShip.getPositionY();
+    int x = this->ownShip.getPositionX() + 32;
+    int y = this->ownShip.getPositionY();
     Bullet *b = new Bullet(x, y, this->textureManager.get("bullet"), UP);
     this->curGameObjects.push_back(b);
+    if (this->ownShip.getExtraFire()) {
+      Bullet *b2 = new Bullet(x + 27, y + 10, this->textureManager.get("bullet"), UP);
+      this->curGameObjects.push_back(b2);
+      Bullet *b3 = new Bullet(x - 27, y + 10, this->textureManager.get("bullet"), UP);
+      this->curGameObjects.push_back(b3);
+      this->noBullets -= 2;
+    }
     this->noBullets--;
     this->noBulletsText.setString(std::to_string(this->noBullets));
   }

@@ -8,7 +8,8 @@ Ship::Ship()
 Ship::Ship(int x, int y, sf::Texture *texture)
 : GameObject(x, y, texture),
   lives(3),
-  velocity(300) {}
+  velocity(300),
+  extraFire(false) {}
 
 Ship::~Ship() {}
 
@@ -54,4 +55,12 @@ void Ship::decreaseLives() {
 
 void Ship::resetLives() {
   this->lives = 3;
+}
+
+bool Ship::getExtraFire() {
+  return this->extraFire;
+}
+
+void Ship::setExtraFire(bool extraFire) {
+  this->extraFire = extraFire;
 }

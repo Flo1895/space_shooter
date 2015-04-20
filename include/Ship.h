@@ -11,6 +11,7 @@ class Ship : public GameObject {
 private:
   int lives;
   int velocity;
+  bool extraFire;
 
 public:
   Ship();
@@ -22,6 +23,8 @@ public:
   int getLives();
   void decreaseLives();
   void resetLives();
+  bool getExtraFire();
+  void setExtraFire(bool extraFire);
 };
 
 #endif // SHIP_H_
