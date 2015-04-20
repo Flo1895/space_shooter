@@ -181,6 +181,13 @@ void Game::update(float timePerFrame) {
   this->ownShip.move(timePerFrame, this->isMovingUp, this->isMovingDown,
                      this->isMovingLeft, this->isMovingRight);
 
+  // add randomly new ship
+  if (Utils::getRandomNumber(1, 150) < 3) {
+    EnemyShip *e = new EnemyShip(Utils::getRandomNumber(10, 1235),
+                                 30, this->textureManager.getRandomShip());
+    this->curGameObjects.push_back(e);
+  }
+
   // firing
   if (this->isFiring && this->noBullets > 0 && this->bulletBackoff <= 0.0f) {
     this->bulletBackoff = 10.f/60.f;
@@ -300,13 +307,6 @@ void Game::draw() {
     this->window.draw(this->newGameMsg);
     this->window.draw(this->highscoreMsg);
   } else if (this->stateManager.getState() == PLAY) {
-    int newEnemyShip = Utils::getRandomNumber(1, 150);
-    if (newEnemyShip < 3) {
-      EnemyShip *e = new EnemyShip(Utils::getRandomNumber(10, 1235),
-                                   30, this->textureManager.getRandomShip());
-      this->curGameObjects.push_back(e);
-    }
-
     // draw kill counter
     this->window.draw(this->killCounterText);
     // draw number of lives of own ship
