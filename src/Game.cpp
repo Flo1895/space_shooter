@@ -245,16 +245,17 @@ void Game::update(float timePerFrame) {
                                       this->textureManager.get("explosion"));
         newGameObjects.push_back(ex);
         PowerUp *lp;
-        if (Utils::getRandomNumber(1, 2) == 1) {
-          lp = new PowerUp(gameObject1->getPositionX(),
-                           gameObject1->getPositionY(),
-                           "LivePowerUp",
-                           this->textureManager.get("livePowerUp"));
-        } else {
-          lp = new PowerUp(gameObject1->getPositionX(),
-                           gameObject1->getPositionY(),
-                           "WeaponPowerUp",
-                           this->textureManager.get("weaponPowerUp"));
+        switch (Utils::getRandomNumber(1, 2)) {
+          case 1:
+            lp = new PowerUp(gameObject1->getPositionX(),
+                             gameObject1->getPositionY(),
+                             "LivePowerUp",
+                             this->textureManager.get("livePowerUp"));
+          case 2:
+            lp = new PowerUp(gameObject1->getPositionX(),
+                             gameObject1->getPositionY(),
+                             "WeaponPowerUp",
+                             this->textureManager.get("weaponPowerUp"));
         }
         newGameObjects.push_back(lp);
         this->killCounter++;
