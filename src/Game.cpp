@@ -11,6 +11,7 @@ Game::Game()
   killCounter(0),
   noBullets(50),
   bulletBackoff(0.0f),
+  extraFireBackoff(0.0f),
   isMovingUp(false),
   isMovingDown(false),
   isMovingLeft(false),
@@ -106,6 +107,12 @@ void Game::run() {
     while (timeSinceLastUpdate > timePerFrame) {
       timeSinceLastUpdate -= timePerFrame;
       this->bulletBackoff -= timePerFrame;
+      if (this->ownShip.getExtraFire()) {
+        this->extraFireBackoff -= timePerFrame;
+        if (this->extraFireBackoff <= 0.0f) {
+          this->ownShip.setExtraFire(false);
+        }
+      }
 
       this->processEvents();
       this->update(timePerFrame);
@@ -237,9 +244,18 @@ void Game::update(float timePerFrame) {
                                       gameObject1->getPositionY(),
                                       this->textureManager.get("explosion"));
         newGameObjects.push_back(ex);
-        LivePowerUp *lp = new LivePowerUp(gameObject1->getPositionX(),
-                                          gameObject1->getPositionY(),
-                                          this->textureManager.get("livePowerUp"));
+        PowerUp *lp;
+        if (Utils::getRandomNumber(1, 2) == 1) {
+          lp = new PowerUp(gameObject1->getPositionX(),
+                           gameObject1->getPositionY(),
+                           "LivePowerUp",
+                           this->textureManager.get("livePowerUp"));
+        } else {
+          lp = new PowerUp(gameObject1->getPositionX(),
+                           gameObject1->getPositionY(),
+                           "WeaponPowerUp",
+                           this->textureManager.get("weaponPowerUp"));
+        }
         newGameObjects.push_back(lp);
         this->killCounter++;
         this->killCounterText.setString(std::to_string(this->killCounter));
@@ -260,6 +276,12 @@ void Game::update(float timePerFrame) {
       gameObject1->setProcessed(true);
       this->ownShip.resetLives();
       this->livesText.setString(std::to_string(this->ownShip.getLives()));
+    }
+    // check collision between weapon powerUp and own ship
+    if (gameObject1->getType() == "WeaponPowerUp" && ownShip.intersects(gameObject1)) {
+      gameObject1->setProcessed(true);
+      this->extraFireBackoff = 300.f/60.f;
+      this->ownShip.setExtraFire(true);
     }
   }
   this->curGameObjects.insert(this->curGameObjects.end(),

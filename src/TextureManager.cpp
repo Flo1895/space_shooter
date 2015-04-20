@@ -10,6 +10,7 @@ TextureManager::TextureManager() {
   this->add("bullet", "../../graphics/bullet.png");
   this->add("explosion", "../../graphics/explosion.png");
   this->add("livePowerUp", "../../graphics/livePowerUp.png");
+  this->add("weaponPowerUp", "../../graphics/weaponPowerUp.png");
 }
 
 TextureManager::~TextureManager() {

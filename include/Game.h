@@ -10,7 +10,7 @@
 #include "Bullet.h"
 #include "EnemyShip.h"
 #include "Explosion.h"
-#include "LivePowerUp.h"
+#include "PowerUp.h"
 
 #include <iostream>
 #include <vector>
@@ -34,6 +34,7 @@ private:
   int killCounter;
   int noBullets;
   float bulletBackoff;
+  float extraFireBackoff;
   bool isMovingUp;
   bool isMovingDown;
   bool isMovingLeft;

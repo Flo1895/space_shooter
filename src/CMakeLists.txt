@@ -16,7 +16,7 @@ set (PROJECT_SOURCES
       TextureManager.cpp
       Highscore.cpp
       StateManager.cpp
-      LivePowerUp.cpp
+      PowerUp.cpp
       Game.cpp
     )
 
@@ -31,7 +31,7 @@ set (PROJECT_LIB_SOURCES
       TextureManager.cpp
       Highscore.cpp
       StateManager.cpp
-      LivePowerUp.cpp
+      PowerUp.cpp
       Game.cpp
     )
 
@@ -47,7 +47,7 @@ set (PROJECT_HEADERS
       ../include/Highscore.h
       ../include/GameState.h
       ../include/StateManager.h
-      ../include/LivePowerUp.h
+      ../include/PowerUp.h
       ../include/Game.h
     )
 
