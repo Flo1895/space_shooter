@@ -86,7 +86,7 @@ void Game::init() {
   this->gameOverMsg.setPosition((1280 - gameOverMsg.getLocalBounds().width) / 2, 320);
   
   // background image
-  this->backgroundSprite.setTexture(*(this->textureManager.get("background2")));
+  this->backgroundSprite.setTexture(*(this->textureManager.get("background1")));
   float scaleX = 1280.0f/1920.0f;
   float scaleY = 720.0f/1080.0f;
   this->backgroundSprite.scale(scaleX, scaleY);
@@ -184,7 +184,7 @@ void Game::update(float timePerFrame) {
   // add randomly new ship
   if (Utils::getRandomNumber(1, 150) < 3) {
     EnemyShip *e = new EnemyShip(Utils::getRandomNumber(10, 1235),
-                                 30, this->textureManager.getRandomShip());
+                                 -50, this->textureManager.getRandomShip());
     this->curGameObjects.push_back(e);
   }
 

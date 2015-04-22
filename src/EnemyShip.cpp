@@ -15,7 +15,7 @@ EnemyShip::~EnemyShip() {}
 void EnemyShip::move(float tickLength) {
   this->position.y += tickLength * 150;
   this->sprite->setPosition(position);
-  if (this->position.y > 600) {
+  if (this->position.y > 720) {
     this->processed = true;
   }
 }
