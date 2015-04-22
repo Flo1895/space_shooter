@@ -251,20 +251,24 @@ void Game::update(float timePerFrame) {
                                       gameObject1->getPositionY(),
                                       this->textureManager.get("explosion"));
         newGameObjects.push_back(ex);
-        PowerUp *lp;
-        switch (Utils::getRandomNumber(1, 2)) {
-          case 1:
-            lp = new PowerUp(gameObject1->getPositionX(),
-                             gameObject1->getPositionY(),
-                             "LivePowerUp",
-                             this->textureManager.get("livePowerUp"));
-          case 2:
-            lp = new PowerUp(gameObject1->getPositionX(),
-                             gameObject1->getPositionY(),
-                             "WeaponPowerUp",
-                             this->textureManager.get("weaponPowerUp"));
+        if (Utils::getRandomNumber(1, 100) < 20) {
+          PowerUp *lp;
+          switch (Utils::getRandomNumber(1, 2)) {
+            case 1:
+              lp = new PowerUp(gameObject1->getPositionX(),
+                               gameObject1->getPositionY(),
+                               "LivePowerUp",
+                               this->textureManager.get("livePowerUp"));
+              break;
+            case 2:
+              lp = new PowerUp(gameObject1->getPositionX(),
+                               gameObject1->getPositionY(),
+                               "WeaponPowerUp",
+                               this->textureManager.get("weaponPowerUp"));
+              break;
+          }
+          newGameObjects.push_back(lp);
         }
-        newGameObjects.push_back(lp);
         this->killCounter++;
         this->killCounterText.setString(std::to_string(this->killCounter));
       }
