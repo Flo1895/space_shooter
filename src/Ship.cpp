@@ -1,4 +1,5 @@
 #include "Ship.h"
+#include <iostream>
 
 Ship::Ship()
 : GameObject(),
@@ -9,7 +10,15 @@ Ship::Ship(int x, int y, sf::Texture *texture)
 : GameObject(x, y, texture),
   lives(3),
   velocity(300),
-  extraFire(false) {}
+  extraFire(false),
+  isMovingUp(false),
+  isMovingDown(false),
+  isMovingLeft(false),
+  isMovingRight(false),
+  weightlessVelocityUp(0),
+  weightlessVelocityDown(0),
+  weightlessVelocityLeft(0),
+  weightlessVelocityRight(0) {}
 
 Ship::~Ship() {}
 
@@ -41,6 +50,49 @@ void Ship::move(float tickLength, bool isMovingUp, bool isMovingDown,
       this->position.x += tickLength * this->velocity;
     }
   }
+
+//  std::cout << this->weightlessVelocityLeft << std::endl;
+//  std::cout << this->position.x << std::endl;
+  // weightless movement
+  this->position.y -= tickLength * this->weightlessVelocityUp;
+  this->position.y += tickLength * this->weightlessVelocityDown;
+  this->position.x -= tickLength * this->weightlessVelocityLeft;
+  this->position.x += tickLength * this->weightlessVelocityRight;
+
+
+  if (isMovingUp == false && this->isMovingUp != isMovingUp && this->weightlessVelocityUp == 0) {
+    this->weightlessVelocityUp = 300;
+  }
+  if (this->weightlessVelocityUp > 0) {
+    this->weightlessVelocityUp -= 10;
+  }
+  this->isMovingUp = isMovingUp;
+
+  if (isMovingDown == false && this->isMovingDown != isMovingDown && this->weightlessVelocityDown == 0) {
+    this->weightlessVelocityDown = 300;
+  }
+  if (this->weightlessVelocityDown > 0) {
+    this->weightlessVelocityDown -= 10;
+  }
+  this->isMovingDown = isMovingDown;
+
+  if (isMovingLeft == false && this->isMovingLeft != isMovingLeft && this->weightlessVelocityLeft == 0) {
+    this->weightlessVelocityLeft = 300;
+  }
+  if (this->weightlessVelocityLeft > 0) {
+    this->weightlessVelocityLeft -= 10;
+  }
+  this->isMovingLeft = isMovingLeft;
+
+  if (isMovingRight == false && this->isMovingRight != isMovingRight && this->weightlessVelocityRight == 0) {
+    this->weightlessVelocityRight = 300;
+  }
+  if (this->weightlessVelocityRight > 0) {
+    this->weightlessVelocityRight -= 10;
+  }
+  this->isMovingRight = isMovingRight;
+//  std::cout << this->weightlessVelocityLeft << std::endl;
+//  std::cout << this->position.x << std::endl;
 
   this->sprite->setPosition(this->position);
 }

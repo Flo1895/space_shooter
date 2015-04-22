@@ -12,6 +12,15 @@ private:
   int lives;
   int velocity;
   bool extraFire;
+  bool isMovingUp;
+  bool isMovingDown;
+  bool isMovingLeft;
+  bool isMovingRight;
+  int weightlessVelocityUp;
+  int weightlessVelocityDown;
+  int weightlessVelocityLeft;
+  int weightlessVelocityRight;
+
 
 public:
   Ship();
