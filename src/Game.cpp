@@ -37,7 +37,6 @@ void Game::init() {
     // logging...
     std::cout << "could not load font" << std::endl;
   }
-  Explosion* e = new Explosion();
 
   // menu items
   // new game
