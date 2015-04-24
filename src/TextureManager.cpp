@@ -36,8 +36,7 @@ sf::Texture* TextureManager::get(std::string name) {
 }
 
 sf::Texture* TextureManager::getRandomShip() {
-  int shipNumber = Utils::getRandomNumber(1, 3);
-  switch (shipNumber) {
+  switch (Utils::getRandomNumber(1, 3)) {
     case 1:
       return this->textures["enemy1"];
       break;
@@ -48,6 +47,8 @@ sf::Texture* TextureManager::getRandomShip() {
       return this->textures["enemy3"];
       break;
     default:
+      // should not be reached
+      return this->textures["enemy1"];
       break;
   }
 }

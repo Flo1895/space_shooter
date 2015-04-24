@@ -22,7 +22,9 @@ Ship::Ship(int x, int y, sf::Texture *texture)
 
 Ship::~Ship() {}
 
-void Ship::move(float tickLength) {}
+void Ship::move(float tickLength) {
+  this->move(tickLength, false, false, false, false);
+}
 
 void Ship::move(float tickLength, bool isMovingUp, bool isMovingDown,
                 bool isMovingLeft, bool isMovingRight) {

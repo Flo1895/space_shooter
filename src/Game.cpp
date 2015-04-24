@@ -361,7 +361,6 @@ void Game::reset() {
   // reset position and lives of own ship
   sf::Vector2f ownShipPosition(362, 620);
   this->ownShip.setPosition(ownShipPosition);
-  this->ownShip.move(0.0f);
   this->ownShip.resetLives();
   std::ostringstream livesString;
   livesString << "Lives: " << this->ownShip.getLives();

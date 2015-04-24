@@ -19,7 +19,7 @@ protected:
 public:
   GameObject();
   GameObject(int x, int y, sf::Texture *texture);
-  ~GameObject();
+  virtual ~GameObject();
   std::string getType();
   void setPosition(sf::Vector2f position);
   int getPositionX();
