@@ -44,7 +44,6 @@ private:
   sf::Font font;
   sf::Text newGameMsg;
   sf::Text highscoreMsg;
-  sf::Text noBulletsText;
   sf::Text killCounterText;
   sf::Text livesText;
   sf::Text gameOverMsg;

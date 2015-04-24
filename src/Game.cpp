@@ -20,7 +20,6 @@ Game::Game()
   font(),
   newGameMsg(),
   highscoreMsg(),
-  noBulletsText(),
   killCounterText(),
   livesText(),
   gameOverMsg(),
@@ -58,25 +57,22 @@ void Game::init() {
                                  (720 - highscoreMsg.getLocalBounds().height) / 2 + 50);
   
   // display kill counter
-  this->killCounterText.setString(std::to_string(this->killCounter));
+  std::ostringstream killString;
+  killString << "Kills: " << this->killCounter;
+  this->killCounterText.setString(killString.str());
   this->killCounterText.setFont(this->font);
-  this->killCounterText.setCharacterSize(50);
+  this->killCounterText.setCharacterSize(15);
   this->killCounterText.setColor(sf::Color::White);
   this->killCounterText.setPosition(20, 20);
 
   // display number of lives for own ship
-  this->livesText.setString(std::to_string(this->ownShip.getLives()));
+  std::ostringstream livesString;
+  livesString << "Lives: " << this->ownShip.getLives();
+  this->livesText.setString(livesString.str());
   this->livesText.setFont(this->font);
-  this->livesText.setCharacterSize(30);
+  this->livesText.setCharacterSize(15);
   this->livesText.setColor(sf::Color::White);
-  this->livesText.setPosition(1000, 20);
-
-  // number of bullets
-  this->noBulletsText.setString(std::to_string(this->noBullets));
-  this->noBulletsText.setFont(this->font);
-  this->noBulletsText.setCharacterSize(30);
-  this->noBulletsText.setColor(sf::Color::White);
-  this->noBulletsText.setPosition(1200, 20);
+  this->livesText.setPosition(20, 40);
 
   // game over message
   this->gameOverMsg.setString("GAME OVER");
@@ -203,7 +199,6 @@ void Game::update(float timePerFrame) {
       this->noBullets -= 2;
     }
     this->noBullets--;
-    this->noBulletsText.setString(std::to_string(this->noBullets));
   }
     
   // move bullets, enemy ships and explosions and check if they are processed
@@ -225,8 +220,7 @@ void Game::update(float timePerFrame) {
     }
     if ((*this->curGameObjectsIt)->isProcessed()) {
       if ((*this->curGameObjectsIt)->getType() == "Bullet") {
-        noBullets++;
-        this->noBulletsText.setString(std::to_string(this->noBullets));        
+        noBullets++;     
       }
       delete *this->curGameObjectsIt;
       this->curGameObjectsIt = this->curGameObjects.erase(this->curGameObjectsIt);
@@ -270,7 +264,9 @@ void Game::update(float timePerFrame) {
           newGameObjects.push_back(lp);
         }
         this->killCounter++;
-        this->killCounterText.setString(std::to_string(this->killCounter));
+        std::ostringstream killString;
+        killString << "Kills: " << this->killCounter;
+        this->killCounterText.setString(killString.str());
       }
     }
     // check collision between enemy ship and own ship
@@ -287,7 +283,9 @@ void Game::update(float timePerFrame) {
     if (gameObject1->getType() == "LivePowerUp" && ownShip.intersects(gameObject1)) {
       gameObject1->setProcessed(true);
       this->ownShip.resetLives();
-      this->livesText.setString(std::to_string(this->ownShip.getLives()));
+      std::ostringstream livesString;
+      livesString << "Lives: " << this->ownShip.getLives();
+      this->livesText.setString(livesString.str());
     }
     // check collision between weapon powerUp and own ship
     if (gameObject1->getType() == "WeaponPowerUp" && ownShip.intersects(gameObject1)) {
@@ -315,8 +313,6 @@ void Game::draw() {
     this->window.draw(this->killCounterText);
     // draw number of lives of own ship
     this->window.draw(this->livesText);
-    // draw number of bullets left
-    this->window.draw(this->noBulletsText);
     // draw own ship
     this->window.draw(this->ownShip.getSprite());
 
@@ -333,7 +329,9 @@ void Game::draw() {
 
 void Game::processEnemyHit() {
   this->ownShip.decreaseLives();
-  this->livesText.setString(std::to_string(this->ownShip.getLives()));
+  std::ostringstream livesString;
+  livesString << "Lives: " << this->ownShip.getLives();
+  this->livesText.setString(livesString.str());
   if (this->ownShip.getLives() == 0) {
     this->stateManager.setState(GAME_OVER);
     this->backgroundSprite.setTexture(*(this->textureManager.get("background2")));
@@ -365,13 +363,16 @@ void Game::reset() {
   this->ownShip.setPosition(ownShipPosition);
   this->ownShip.move(0.0f);
   this->ownShip.resetLives();
-  this->livesText.setString(std::to_string(this->ownShip.getLives()));
+  std::ostringstream livesString;
+  livesString << "Lives: " << this->ownShip.getLives();
+  this->livesText.setString(livesString.str());
 
   // reset other values
   this->killCounter = 0;
-  this->killCounterText.setString(std::to_string(this->killCounter));
+  std::ostringstream killString;
+  killString << "Kills: " << this->killCounter;
+  this->killCounterText.setString(killString.str());
   this->noBullets = 50;
-  this->noBulletsText.setString(std::to_string(this->noBullets));
   this->bulletBackoff = 0.0f;
   this->isMovingUp = false;
   this->isMovingDown = false;
