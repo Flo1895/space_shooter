@@ -30,34 +30,44 @@ void Ship::move(float tickLength, bool isMovingUp, bool isMovingDown,
     // move up if key up was pressed
     if (this->position.y > 10) {
       this->position.y -= tickLength * this->velocity;
+      this->weightlessVelocityUp = 0;
     }
   }
   if (isMovingDown) {
     // move down if key down was pressed
     if (this->position.y < 620) {
       this->position.y += tickLength * this->velocity;
+      this->weightlessVelocityDown = 0;
     }
   }
   if (isMovingLeft) {
     // move left if key left was pressed
     if (this->position.x > 10) {
       this->position.x -= tickLength * this->velocity;
+      this->weightlessVelocityLeft = 0;
     }
   }
   if (isMovingRight) {
     // move right if key right was pressed
     if (this->position.x < 1235) {
       this->position.x += tickLength * this->velocity;
+      this->weightlessVelocityRight = 0;
     }
   }
 
-//  std::cout << this->weightlessVelocityLeft << std::endl;
-//  std::cout << this->position.x << std::endl;
   // weightless movement
-  this->position.y -= tickLength * this->weightlessVelocityUp;
-  this->position.y += tickLength * this->weightlessVelocityDown;
-  this->position.x -= tickLength * this->weightlessVelocityLeft;
-  this->position.x += tickLength * this->weightlessVelocityRight;
+  if (this->position.y > 10) {
+    this->position.y -= tickLength * this->weightlessVelocityUp;
+  }
+  if (this->position.y < 620) {
+    this->position.y += tickLength * this->weightlessVelocityDown;
+  }
+  if (this->position.x > 10) {
+    this->position.x -= tickLength * this->weightlessVelocityLeft;
+  }
+  if (this->position.x < 1235) {
+    this->position.x += tickLength * this->weightlessVelocityRight;
+  }
 
 
   if (isMovingUp == false && this->isMovingUp != isMovingUp && this->weightlessVelocityUp == 0) {
@@ -91,8 +101,6 @@ void Ship::move(float tickLength, bool isMovingUp, bool isMovingDown,
     this->weightlessVelocityRight -= 10;
   }
   this->isMovingRight = isMovingRight;
-//  std::cout << this->weightlessVelocityLeft << std::endl;
-//  std::cout << this->position.x << std::endl;
 
   this->sprite->setPosition(this->position);
 }
