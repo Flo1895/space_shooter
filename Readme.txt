@@ -1,6 +1,5 @@
-Necessary changes for usage:
-- Change project name in CMakeLists.txt
-- Change name for executable in src/CMakeLists.txt
-- Change name for library in src/CMakeLists.txt
-- Adding sources and headers in src/CMakeLists.txt
-- Specify test cases in test/CMakeLists.txt
+Welcome to my little space shooter game which is my first game using SFML.
+
+You can control the ship's movement by using the arrow keys. In order to fire a bullet press space.
+
+Any feedback is highly appreciated.
