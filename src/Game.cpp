@@ -86,7 +86,7 @@ void Game::init() {
   this->gameOverMsg.setPosition((1280 - gameOverMsg.getLocalBounds().width) / 2, 320);
   
   // background image
-  this->backgroundSprite.setTexture(*(this->textureManager.get("background1")));
+  this->backgroundSprite.setTexture(*(this->textureManager.get("background2")));
   float scaleX = 1280.0f/1920.0f;
   float scaleY = 720.0f/1080.0f;
   this->backgroundSprite.scale(scaleX, scaleY);
@@ -336,6 +336,7 @@ void Game::processEnemyHit() {
   this->livesText.setString(std::to_string(this->ownShip.getLives()));
   if (this->ownShip.getLives() == 0) {
     this->stateManager.setState(GAME_OVER);
+    this->backgroundSprite.setTexture(*(this->textureManager.get("background2")));
   }
 }
 
@@ -355,6 +356,9 @@ void Game::reset() {
     delete *curGameObjectsIt;
     curGameObjectsIt = curGameObjects.erase(curGameObjectsIt);
   }
+
+  // reset background sprite
+  this->backgroundSprite.setTexture(*(this->textureManager.get("background1")));
 
   // reset position and lives of own ship
   sf::Vector2f ownShipPosition(362, 620);
