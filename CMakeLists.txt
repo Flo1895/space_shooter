@@ -12,7 +12,7 @@ if (${UNIX})
 endif (${UNIX})
 
 # project name
-project (asteroids)
+project (space_shooter)
 
 # add sfml
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
