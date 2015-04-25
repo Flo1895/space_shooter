@@ -1,27 +1,15 @@
 cmake_minimum_required (VERSION 2.6)
 
-if (${WIN32})
-  message ("Build on windows not (yet) supported.")
-endif (${WIN32})
-
-# -I/home/flo/SFML-2.1/include -L/home/flo/SFML-2.1/lib
-# set compiler and options
-if (${UNIX})
-  set (CMAKE_CXX_FLAGS "-std=c++0x -Wall -Wextra -I/home/flo/SFML-2.2/include -L/home/flo/SFML-2.2/lib -lsfml-graphics -lsfml-window -lsfml-system"
-       CACHE STRING "Flags used by the compiler during all build types.")
-endif (${UNIX})
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra ")
 
 # project name
 project (space_shooter)
 
-# add sfml
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
-set(SFML_ROOT "/home/flo/SFML-2.2" CACHE PATH "SFML root directory" )
-find_package(SFML 2 REQUIRED system window graphics network audio)
-
 # specify options
 option (BUILD_TESTS
         "Build all tests automatically with the library." OFF)
+option (STATIC_SFML
+        "Use the static SFML libraries." OFF)
 
 # common dirs and libraries
 set (COMMON_INCLUDE_DIR
@@ -29,10 +17,23 @@ set (COMMON_INCLUDE_DIR
      CACHE INTERNAL
      "Common include directories used by project.")
 
-# set default build type explicitly to Debug
+# set default build type explicitly to Release
 if (NOT CMAKE_BUILD_TYPE)
-  set (CMAKE_BUILD_TYPE Debug)
+  set (CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build type." FORCE)
 endif (NOT CMAKE_BUILD_TYPE)
+
+if (STATIC_SFML)
+  set (SFML_STATIC_LIBRARIES TRUE)
+endif (STATIC_SFML)
+
+# add sfml
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
+set(SFML_ROOT "" CACHE PATH "SFML root directory")
+find_package(SFML 2 REQUIRED audio graphics window system)
+
+if(NOT SFML_FOUND)
+	message(FATAL_ERROR "SFML couldn't be located!")
+endif()
 
 # add subdirectories to build
 add_subdirectory (src)

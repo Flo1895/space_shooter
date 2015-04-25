@@ -1,6 +1,7 @@
 #include "Highscore.h"
 
 #include <iostream>
+#include <cstdlib>
 
 Highscore::Highscore(std::string path)
 : highscore(0),
@@ -26,7 +27,7 @@ void Highscore::loadFromFile() {
   if (highscoreFile.is_open()) {
     getline(highscoreFile, line);
     if (line != "") {
-      this->highscore = atoi(line.c_str());
+      this->highscore = std::atoi(line.c_str());
     }
     highscoreFile.close();
   }

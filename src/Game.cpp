@@ -33,7 +33,7 @@ void Game::init() {
   Utils::initPRNG();
 
   // load font
-  if (!this->font.loadFromFile("../../font/unispace_bold.ttf")) {
+  if (!this->font.loadFromFile("font/unispace_bold.ttf")) {
     // logging...
     std::cout << "could not load font" << std::endl;
   }
@@ -246,7 +246,7 @@ void Game::update(float timePerFrame) {
                                       this->textureManager.get("explosion"));
         newGameObjects.push_back(ex);
         if (Utils::getRandomNumber(1, 100) < 20) {
-          PowerUp *lp;
+          PowerUp *lp = nullptr;
           switch (Utils::getRandomNumber(1, 2)) {
             case 1:
               lp = new PowerUp(gameObject1->getPositionX(),

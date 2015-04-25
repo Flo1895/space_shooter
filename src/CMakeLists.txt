@@ -53,10 +53,8 @@ set (PROJECT_HEADERS
 
 # create executable
 add_executable (space_shooter ${PROJECT_SOURCES})
-if(SFML_FOUND)
-  include_directories(${SFML_INCLUDE_DIR})
-  target_link_libraries(space_shooter ${SFML_LIBRARIES})
-endif()
+include_directories(${SFML_INCLUDE_DIR})
+target_link_libraries(space_shooter ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
 # create library target
 add_library (Asteroids ${PROJECT_LIB_SOURCES} ${PROJECT_HEADERS})
